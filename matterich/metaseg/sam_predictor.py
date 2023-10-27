@@ -131,7 +131,7 @@ class SegManualMaskPredictor:
 
     def image_predict(
             self,
-            source: Union[str, Mat],
+            source: Union[str, np.ndarray],
             model_type,
             input_box=None,
             input_point=None,
