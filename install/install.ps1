@@ -30,13 +30,17 @@ Function ManageVenv {
         [string]$PythonPath
     )
     try {
-        if (Test-Path ".\venv" -or Test-Path "..\venv") {
-            Remove-Item -Recurse -Force ".\venv" -ErrorAction SilentlyContinue
-            Remove-Item -Recurse -Force "..\venv" -ErrorAction SilentlyContinue
-            Write-Host "Old virtual environment removed."
+        $venvPaths = @(".\venv", "..\venv")
+        foreach ($venv in $venvPaths) {
+            if (Test-Path $venv) {
+                Remove-Item -Recurse -Force $venv -ErrorAction SilentlyContinue
+                Write-Host "Old virtual environment at $venv removed."
+            }
         }
-        & $PythonPath -m venv venv
-        $activationScripts = @(".\venv\Scripts\activate", ".\venv\Scripts\activate.ps1", ".\venv\Scripts\activate.bat", "..\venv\Scripts\activate", "..\venv\Scripts\activate.ps1", "..\venv\Scripts\activate.bat")
+        
+        & $PythonPath -m venv ".\venv"
+
+        $activationScripts = @(".\venv\Scripts\activate", ".\venv\Scripts\activate.ps1", ".\venv\Scripts\activate.bat")
         $activated = $false
         foreach ($script in $activationScripts) {
             if (Test-Path $script) {
@@ -45,9 +49,11 @@ Function ManageVenv {
                 break
             }
         }
+
         if (-not $activated) {
             throw "Failed to activate virtual environment."
         }
+
         Write-Host "Virtual environment activated successfully."
         & pip install -r requirements.txt -r req.txt -r requirements-dev.txt
     } catch {
