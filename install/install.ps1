@@ -55,6 +55,8 @@ Function ManageVenv {
         }
 
         Write-Host "Virtual environment activated successfully."
+        & pip install gradio
+        & pip install metaseg
         & pip install -r requirements.txt -r req.txt -r requirements-dev.txt
     } catch {
         Write-Host "An error occurred: $_"
