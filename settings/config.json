@@ -1,0 +1,20 @@
+{
+    "src": "video.mp4",
+    "model": "vit_h",
+    "model_type": "vit_l",
+    "points_per_side": 16,
+    "points_per_batch": 64,
+    "min_area": 1000,
+    "output_path": "output.mp4",
+    "pred_iou_thresh": 0.5,
+    "stability_score_thresh": 0.5,
+    "stability_score_offset": 0.1,
+    "box_nms_thresh": 0.5,
+    "crop_n_layers": 0,
+    "crop_nms_thresh": 0.5,
+    "crop_overlap_ratio": 0.2,
+    "crop_n_points_downscale_factor": 2,
+    "point_grids": null,
+    "min_mask_region_area": 0,
+    "output_mode": "binary_mask"
+}

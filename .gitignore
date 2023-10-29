@@ -7,6 +7,12 @@ Venv
 # C extensions
 *.so
 
+third_party/
+core/
+models/
+tmp/
+venv/
+install/venv/
 # Distribution / packaging
 .Python
 build/

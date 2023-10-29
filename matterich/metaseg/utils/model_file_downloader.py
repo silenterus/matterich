@@ -8,7 +8,7 @@ from requests import Response, get
 from tqdm.auto import tqdm
 
 # A dictionary containing model types as keys and their respective URLs as values
-MODEL_URLS: dict[str : tuple[str]] = {
+MODEL_URLS: dict[str: tuple[str]] = {
     "vit_h": (
         "https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth",
         "green",
@@ -75,11 +75,11 @@ def download_model(model_type):
             res.raw.read, decode_content=True
         )  # Decompress if needed
         with tqdm.wrapattr(
-            res.raw,
-            "read",
-            total=file_size,
-            desc=desc,
-            colour=MODEL_URLS[model_type][1],
+                res.raw,
+                "read",
+                total=file_size,
+                desc=desc,
+                colour=MODEL_URLS[model_type][1],
         ) as r_raw:
             with folder_path.open("wb") as f:
                 copyfileobj(r_raw, f)

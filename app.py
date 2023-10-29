@@ -1,42 +1,50 @@
+import gradio as gr
+
 import argparse
 import json
 import os
+from statics.create_json import load_json, save_json
 import numpy as np
-from metaseg import SegMultiAutoMaskPredictor
+# from metaseg import SegMultiAutoMaskPredictor
+from statics.models import download_codeformer
+from matterich.taps import image_app
+from matterich.taps import video_app
+from matterich.taps import sahi_app
 
 
-def main(args) -> None:
+def matterich_app():
+    app = gr.Blocks(title="title",
+                    mode="blocks"
+                    )
+    with app:
+        with gr.Row():
+            with gr.Column():
+                with gr.Tab("Image"):
+                    image_app()
+                with gr.Tab("Video"):
+                    video_app()
+                with gr.Tab("SAHI"):
+                    sahi_app()
+
+    app.queue(concurrency_count=1)
     try:
-        SegMultiAutoMaskPredictor().video_predict(
-            source=args.src,
-            model_type=args.model_type,
-            points_per_side=8,
-            points_per_batch=args.points_per_batch,
-            min_area=args.min_area,
-            output_path=args.output_path,
-            checkpoint=args.model,
-            pred_iou_thresh=args.pred_iou_thresh,
-            stability_score_thresh=args.stability_score_thresh,
-            stability_score_offset=args.stability_score_offset,
-            box_nms_thresh=args.box_nms_thresh,
-            crop_n_layers=args.crop_n_layers,
-            crop_nms_thresh=args.crop_nms_thresh,
-            crop_overlap_ratio=args.crop_overlap_ratio,
-            crop_n_points_downscale_factor=args.crop_n_points_downscale_factor,
-            point_grids=None,
-            min_mask_region_area=args.min_mask_region_area,
-            output_mode=args.output_mode,
-            save_layers_interval=5
+        app.launch(
+            inbrowser=True,
+            debug=True,
+            server_name="localhost",
+            server_port=7860,
+
         )
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"An error occurred: {e}")
 
 
 if __name__ == "__main__":
+
     parser = argparse.ArgumentParser(description='Automated video masking using metaseg.')
     config_file = "config.json"
     config = load_json(config_file)
-
+    download_codeformer()
     if config is None:
         parser.add_argument('--src', type=str, default="video.mp4",
                             help='Source path of the video file to be processed.')
@@ -96,5 +104,6 @@ if __name__ == "__main__":
         save_json(config_file, config)
     else:
         args = argparse.Namespace(**config)
+    matterich_app()
 
-    main(args)
+    # main(args)
